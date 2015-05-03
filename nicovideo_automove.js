@@ -8,10 +8,14 @@ if (el.length == 0) {
 
 var commuUrl = el[0].href
 
-var isTimeshift = function() {
+var getStartTime = function() {
     var informationText = $('.information')[0].innerHTML;
     var startTimeText = informationText.match(/([0-9].*)開場/)[1].replace('：', ':');
-    var startTime = Date.parse(startTimeText);
+    return Date.parse(startTimeText);
+}
+
+var isTimeshift = function() {
+    var startTime = getStartTime();
     var nowTime = (new Date).getTime();
 
     if ((nowTime - startTime) / 1000 / 60 > 60) {
@@ -40,17 +44,19 @@ var automove = function() {
     });
 }
 
-if (!isTimeshift()) {
-    var ping = function() {
-        var timer = null;
-        console.log('ping / 10 sec');
-        try {
-            automove();
-            timer = setTimeout('ping()', 10000);
-        } catch(e) {
-            console.log('error occured. ping in 1 min.');
-            timer = setTimeout('ping()', 60000);
-        }
+var ping = function() {
+    if (isTimeshift()) {
+        return;
     }
-    ping();
+    var timer = null;
+    console.log('ping / 30 sec');
+    try {
+        automove();
+        timer = setTimeout('ping()', 30000);
+    } catch(e) {
+        console.log('error occured. ping in 1 min.');
+        timer = setTimeout('ping()', 60000);
+    }
 }
+
+ping();
