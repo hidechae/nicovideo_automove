@@ -36,7 +36,7 @@ var automove = function() {
     }).done(function(xml) {
         var broadcastUrl = $(xml).find('.community')[0].href
         if (broadcastUrl.match(location.pathname) == null) {
-            location.href = broadcastUrl;
+            location.href = broadcastUrl + '#wall_canvas';
         }
     }).fail(function(data) {
         console.log('throw');
